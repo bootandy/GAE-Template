@@ -1,0 +1,29 @@
+<html>
+    <body>
+        {% for t in thingies %}
+            {% if t %}
+                <b>{{ t.name }}</b>
+                <b>{{ t.date }}</b>
+                <b>{{ t.widget }}</b>
+                <br/>
+            {% endif %}
+        {% endfor %}
+
+        <form action="/addthingy" method="post">
+            <div>New Thingy: <input type="text" name="thingyname" ></div>
+            <div><input type="submit" value="Add Thingy"></div>
+        </form>
+
+        <form action="/destroythingy" method="post">
+            <div>Destroy: <input type="text" name="thingyname" ></div>
+            <div><input type="submit" value="send"></div>
+        </form>
+
+        <form action="/addwidget" method="post">
+            <div>New Widget : <input type="text" name="widgetname" ></div>
+            <div>goes to: <input type="text" name="thingyname" ></div>
+            <div><input type="submit" value="send"></div>
+        </form>
+
+    </body>
+</html>
