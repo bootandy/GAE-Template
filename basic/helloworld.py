@@ -3,64 +3,52 @@ from google.appengine.ext import webapp
 from google.appengine.ext.webapp.util import run_wsgi_app
 from google.appengine.ext import db
 from google.appengine.ext.webapp import template
+import os
+#os.environ['DJANGO_SETTINGS_MODULE'] = 'settings'
+
+#from google.appengine.dist import use_library
+#use_library('django', '1.2')
 
 
-class Thingy(db.Model):
-  name = db.StringProperty(multiline=True)
+class BlogPost(db.Model):
+  title = db.StringProperty(multiline=True)
+  body = db.StringProperty(multiline=True)
   date = db.DateTimeProperty(auto_now_add=True)
-  widget = db.StringProperty()
-
 
 class MainPage(webapp.RequestHandler):
   def get(self):
-    thingy_query = Thingy.all().order('-date')
-    thingies = thingy_query.fetch(10)
+    blog_post_query = BlogPost.all().order('-date')
+    posts = blog_post_query.fetch(10)
 
     template_values = {
-      'thingies': thingies,
+      'posts': posts,
     }
 
     path = os.path.join(os.path.dirname(__file__), 'templates/index.html')
     self.response.out.write(template.render(path, template_values))
 
-class AddThingyPage(webapp.RequestHandler):
+class AddPostPage(webapp.RequestHandler):
   def post(self):
-    thingy_name = self.request.get('thingyname')
-    c = Thingy()
-    c.name = thingy_name
-    c.put()
+    title = self.request.get('title')
+    body = self.request.get('body')
+    post = BlogPost()
+    post.title = title
+    post.body = body
+    post.put()
     self.redirect('/')
 
-class AddWidgetPage(webapp.RequestHandler):
+
+class DestroyPostPage(webapp.RequestHandler):
   def post(self):
-    thingy_name = self.request.get('thingyname')
-    widget_name = self.request.get('widgetname')
-    thingy_query = Thingy.all().filter('name =', thingy_name)
-    c = thingy_query.fetch(1)[0]
-
-    if c:
-      c.widget = widget_name
-      c.put()
-    self.redirect('/')
-
-class DestroyThingyPage(webapp.RequestHandler):
-  def post(self):
-    thingy_name = self.request.get('thingyname')
-
-    thingy_query = Thingy.all()
-    thingy_query.filter("name =", thingy_name)
-    thingy_query.order('-date')
-
-    thingies = thingy_query.fetch(1)
-    db.delete(thingies)
+    post_key = self.request.get('post_key')
+    db.delete(post_key)
     self.redirect('/')
 
 
 application = webapp.WSGIApplication(
   [('/', MainPage),
-    ('/addthingy', AddThingyPage),
-    ('/addwidget', AddWidgetPage),
-   ('/destroythingy', DestroyThingyPage)],
+    ('/add', AddPostPage),
+    ('/destroy', DestroyPostPage)],
   debug=True)
 
 

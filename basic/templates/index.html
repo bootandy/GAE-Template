@@ -1,28 +1,23 @@
 <html>
     <body>
-        {% for t in thingies %}
-            {% if t %}
-                <b>{{ t.name }}</b>
-                <b>{{ t.date }}</b>
-                <b>{{ t.widget }}</b>
+        {% for p in posts %}
+            {% if p %}
+                <h2>{{ p.title }}</h2>
+                <i>Posted on: {{ p.date }}</i>
+                <p>{{ p.body }}</p>
+                <form action="/destroy" method="post">
+                    <input type="hidden" name="post_key" value="{{p.key}}" />
+                    <input type="submit" value="Remove Post">
+                </form>
                 <br/>
             {% endif %}
         {% endfor %}
 
-        <form action="/addthingy" method="post">
-            <div>New Thingy: <input type="text" name="thingyname" ></div>
-            <div><input type="submit" value="Add Thingy"></div>
-        </form>
-
-        <form action="/destroythingy" method="post">
-            <div>Destroy: <input type="text" name="thingyname" ></div>
-            <div><input type="submit" value="send"></div>
-        </form>
-
-        <form action="/addwidget" method="post">
-            <div>New Widget : <input type="text" name="widgetname" ></div>
-            <div>goes to: <input type="text" name="thingyname" ></div>
-            <div><input type="submit" value="send"></div>
+        <form action="/add" method="post">
+            <h3> Add a Post: </h3>
+            <div>Title: &nbsp;<input type="text" name="title" size="80"></div>
+            <div>Body: <textarea rows="10" cols ="100" name="body" ></textarea></div>
+            <div> <input type="submit" value="Add"> </div>
         </form>
 
     </body>
