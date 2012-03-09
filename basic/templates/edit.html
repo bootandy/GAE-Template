@@ -1,0 +1,15 @@
+<html>
+<body>
+
+<form action="/finish_edit" method="post">
+    <h3> Edit a Post: </h3>
+
+    <div>Title: &nbsp;<input type="text" name="title" size="80" value={{title}}></div>
+    <div>Body: <textarea rows="10" cols="100" name="body">{{body}}</textarea></div>
+    <input type="hidden" name="key" value={{key}}>
+    <div><input type="submit" value="Save Changes"></div>
+
+</form>
+
+</body>
+</html>
