@@ -9,6 +9,10 @@
                     <input type="hidden" name="post_key" value="{{p.key}}" />
                     <input type="submit" value="Remove Post">
                 </form>
+                <form action="/start_edit" method="post">
+                    <input type="hidden" name="post_key" value="{{p.key}}" />
+                    <input type="submit" value="Edit Post">
+                </form>
                 <br/>
             {% endif %}
         {% endfor %}

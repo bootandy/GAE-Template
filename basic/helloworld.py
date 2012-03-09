@@ -44,10 +44,36 @@ class DestroyPostPage(webapp.RequestHandler):
     db.delete(post_key)
     self.redirect('/')
 
+class StartEditPage(webapp.RequestHandler):
+  def post(self):
+    post_key = self.request.get('post_key')
+    post = db.get(post_key)
+
+    template_values = {
+      'title':post.title,
+      'body':post.body,
+      'key':post_key,
+    }
+    path = os.path.join(os.path.dirname(__file__), 'templates/edit.html')
+    self.response.out.write(template.render(path, template_values))
+
+class FinishEditPage(webapp.RequestHandler):
+  def post(self):
+    title = self.request.get('title')
+    body = self.request.get('body')
+    post_key = self.request.get('key')
+    post = db.get(post_key)
+    post.title = title
+    post.body = body
+    post.put()
+    self.redirect('/')
+
 
 application = webapp.WSGIApplication(
   [('/', MainPage),
     ('/add', AddPostPage),
+    ('/start_edit', StartEditPage),
+    ('/finish_edit', FinishEditPage),
     ('/destroy', DestroyPostPage)],
   debug=True)
 
